@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export default function Solver({ initialLatex = '' }) {
   const [latex, setLatex] = useState(initialLatex)
@@ -39,12 +40,18 @@ export default function Solver({ initialLatex = '' }) {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow p-6">
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="bg-white rounded-xl shadow p-6">
       <h3 className="text-lg font-semibold mb-4">Solve & Explain</h3>
       <form onSubmit={submit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">Problem (LaTeX)</label>
-          <textarea value={latex} onChange={(e) => setLatex(e.target.value)} rows={6} className="mt-1 w-full border rounded px-3 py-2 font-mono" placeholder={String.raw`\\int_0^1 x^2\\,dx`} />
+          <textarea
+            value={latex}
+            onChange={(e) => setLatex(e.target.value)}
+            rows={6}
+            className="mt-1 w-full border rounded px-3 py-2 font-mono focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition"
+            placeholder={String.raw`\\int_0^1 x^2\\,dx`}
+          />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -59,20 +66,39 @@ export default function Solver({ initialLatex = '' }) {
             <input value={grade} onChange={(e) => setGrade(e.target.value)} placeholder="e.g., high school" className="mt-1 w-full border rounded px-3 py-2" />
           </div>
         </div>
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <button type="submit" disabled={loading} className="px-5 py-2 rounded bg-purple-600 text-white disabled:opacity-60">
+        {error && (
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-red-600">
+            {error}
+          </motion.p>
+        )}
+        <motion.button
+          type="submit"
+          disabled={loading}
+          whileHover={{ scale: loading ? 1 : 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="px-5 py-2 rounded bg-purple-600 text-white disabled:opacity-60 shadow-lg shadow-purple-600/20"
+        >
           {loading ? 'Thinking...' : 'Get Step-by-step Solution'}
-        </button>
+        </motion.button>
       </form>
 
-      {solution && (
-        <div className="mt-6">
-          <h4 className="font-semibold mb-2">Result</h4>
-          <div className="prose max-w-none whitespace-pre-wrap bg-gray-50 p-4 rounded border">
-            {solution}
-          </div>
-        </div>
-      )}
-    </div>
+      <AnimatePresence>
+        {solution && (
+          <motion.div
+            key="solution"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.35 }}
+            className="mt-6"
+          >
+            <h4 className="font-semibold mb-2">Result</h4>
+            <motion.div layout className="prose max-w-none whitespace-pre-wrap bg-gray-50 p-4 rounded border">
+              {solution}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   )
 }

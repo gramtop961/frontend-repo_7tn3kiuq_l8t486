@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export default function Generator() {
   const [topic, setTopic] = useState('Linear equations')
@@ -36,12 +37,12 @@ export default function Generator() {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow p-6">
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="bg-white rounded-xl shadow p-6">
       <h3 className="text-lg font-semibold mb-4">Generate Exercises</h3>
       <form onSubmit={submit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">Topic</label>
-          <input value={topic} onChange={(e) => setTopic(e.target.value)} className="mt-1 w-full border rounded px-3 py-2" placeholder="e.g., Quadratic equations" />
+          <input value={topic} onChange={(e) => setTopic(e.target.value)} className="mt-1 w-full border rounded px-3 py-2 focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition" placeholder="e.g., Quadratic equations" />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
@@ -65,19 +66,38 @@ export default function Generator() {
             </select>
           </div>
         </div>
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <button type="submit" disabled={loading} className="px-5 py-2 rounded bg-emerald-600 text-white disabled:opacity-60">
+        {error && (
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-red-600">
+            {error}
+          </motion.p>
+        )}
+        <motion.button
+          type="submit"
+          disabled={loading}
+          whileHover={{ scale: loading ? 1 : 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="px-5 py-2 rounded bg-emerald-600 text-white disabled:opacity-60 shadow-lg shadow-emerald-600/20"
+        >
           {loading ? 'Generating...' : 'Generate Set'}
-        </button>
+        </motion.button>
       </form>
-      {result && (
-        <div className="mt-6">
-          <h4 className="font-semibold mb-2">Exercises</h4>
-          <div className="prose max-w-none whitespace-pre-wrap bg-gray-50 p-4 rounded border">
-            {result}
-          </div>
-        </div>
-      )}
-    </div>
+      <AnimatePresence>
+        {result && (
+          <motion.div
+            key="result"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.35 }}
+            className="mt-6"
+          >
+            <h4 className="font-semibold mb-2">Exercises</h4>
+            <motion.div layout className="prose max-w-none whitespace-pre-wrap bg-gray-50 p-4 rounded border">
+              {result}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   )
 }
