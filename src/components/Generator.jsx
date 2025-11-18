@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Sparkles, ListChecks } from 'lucide-react'
 
 export default function Generator() {
   const [topic, setTopic] = useState('Linear equations')
@@ -37,21 +38,28 @@ export default function Generator() {
   }
 
   return (
-    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="bg-white rounded-xl shadow p-6">
-      <h3 className="text-lg font-semibold mb-4">Generate Exercises</h3>
-      <form onSubmit={submit} className="space-y-4">
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="bg-white rounded-xl shadow-sm border p-6">
+      <div className="flex items-start justify-between">
+        <div>
+          <h3 className="text-lg font-semibold flex items-center gap-2"><Sparkles className="h-5 w-5 text-emerald-600"/>Generate Exercises</h3>
+          <p className="text-sm text-slate-600 mt-1">Pick a topic and difficulty. Create a set of ready-to-use practice problems.</p>
+        </div>
+        <ListChecks className="h-5 w-5 text-slate-300" aria-hidden />
+      </div>
+
+      <form onSubmit={submit} className="mt-4 space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">Topic</label>
-          <input value={topic} onChange={(e) => setTopic(e.target.value)} className="mt-1 w-full border rounded px-3 py-2 focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition" placeholder="e.g., Quadratic equations" />
+          <input value={topic} onChange={(e) => setTopic(e.target.value)} className="mt-1 w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition bg-white/90" placeholder="e.g., Quadratic equations" />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">Count</label>
-            <input type="number" min={1} max={20} value={count} onChange={(e) => setCount(e.target.value)} className="mt-1 w-full border rounded px-3 py-2" />
+            <input type="number" min={1} max={20} value={count} onChange={(e) => setCount(e.target.value)} className="mt-1 w-full border rounded-lg px-3 py-2 bg-white/90" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Difficulty</label>
-            <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)} className="mt-1 w-full border rounded px-3 py-2">
+            <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)} className="mt-1 w-full border rounded-lg px-3 py-2 bg-white/90">
               <option value="easy">easy</option>
               <option value="medium">medium</option>
               <option value="hard">hard</option>
@@ -60,7 +68,7 @@ export default function Generator() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Language</label>
-            <select value={language} onChange={(e) => setLanguage(e.target.value)} className="mt-1 w-full border rounded px-3 py-2">
+            <select value={language} onChange={(e) => setLanguage(e.target.value)} className="mt-1 w-full border rounded-lg px-3 py-2 bg-white/90">
               <option value="en">English</option>
               <option value="el">Greek</option>
             </select>
@@ -76,7 +84,7 @@ export default function Generator() {
           disabled={loading}
           whileHover={{ scale: loading ? 1 : 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="px-5 py-2 rounded bg-emerald-600 text-white disabled:opacity-60 shadow-lg shadow-emerald-600/20"
+          className="px-5 py-2.5 rounded-lg bg-emerald-600 text-white disabled:opacity-60 shadow-lg shadow-emerald-600/20"
         >
           {loading ? 'Generating...' : 'Generate Set'}
         </motion.button>

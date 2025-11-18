@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { FileText, Brain } from 'lucide-react'
 
 export default function Solver({ initialLatex = '' }) {
   const [latex, setLatex] = useState(initialLatex)
@@ -40,30 +41,37 @@ export default function Solver({ initialLatex = '' }) {
   }
 
   return (
-    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="bg-white rounded-xl shadow p-6">
-      <h3 className="text-lg font-semibold mb-4">Solve & Explain</h3>
-      <form onSubmit={submit} className="space-y-4">
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="bg-white rounded-xl shadow-sm border p-6">
+      <div className="flex items-start justify-between">
+        <div>
+          <h3 className="text-lg font-semibold flex items-center gap-2"><FileText className="h-5 w-5 text-purple-600"/>Solve & Explain</h3>
+          <p className="text-sm text-slate-600 mt-1">Paste LaTeX or send directly from OCR. Get a clear, step-by-step solution.</p>
+        </div>
+        <Brain className="h-5 w-5 text-slate-300" aria-hidden />
+      </div>
+
+      <form onSubmit={submit} className="mt-4 space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">Problem (LaTeX)</label>
           <textarea
             value={latex}
             onChange={(e) => setLatex(e.target.value)}
             rows={6}
-            className="mt-1 w-full border rounded px-3 py-2 font-mono focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition"
+            className="mt-1 w-full border rounded-lg px-3 py-2 font-mono focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition bg-white/90"
             placeholder={String.raw`\\int_0^1 x^2\\,dx`}
           />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">Language</label>
-            <select value={language} onChange={(e) => setLanguage(e.target.value)} className="mt-1 w-full border rounded px-3 py-2">
+            <select value={language} onChange={(e) => setLanguage(e.target.value)} className="mt-1 w-full border rounded-lg px-3 py-2 bg-white/90">
               <option value="en">English</option>
               <option value="el">Greek</option>
             </select>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Grade (optional)</label>
-            <input value={grade} onChange={(e) => setGrade(e.target.value)} placeholder="e.g., high school" className="mt-1 w-full border rounded px-3 py-2" />
+            <input value={grade} onChange={(e) => setGrade(e.target.value)} placeholder="e.g., high school" className="mt-1 w-full border rounded-lg px-3 py-2 bg-white/90" />
           </div>
         </div>
         {error && (
@@ -76,7 +84,7 @@ export default function Solver({ initialLatex = '' }) {
           disabled={loading}
           whileHover={{ scale: loading ? 1 : 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="px-5 py-2 rounded bg-purple-600 text-white disabled:opacity-60 shadow-lg shadow-purple-600/20"
+          className="px-5 py-2.5 rounded-lg bg-purple-600 text-white disabled:opacity-60 shadow-lg shadow-purple-600/20"
         >
           {loading ? 'Thinking...' : 'Get Step-by-step Solution'}
         </motion.button>
